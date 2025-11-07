@@ -57,6 +57,7 @@ namespace King_Land
             // panelShadow
             // 
             this.panelShadow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.panelShadow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelShadow.Location = new System.Drawing.Point(178, 118);
             this.panelShadow.Name = "panelShadow";
             this.panelShadow.Size = new System.Drawing.Size(560, 380);
@@ -122,31 +123,10 @@ namespace King_Land
             this.txtPassword.Size = new System.Drawing.Size(480, 32);
             this.txtPassword.TabIndex = 1;
             this.txtPassword.UseSystemPasswordChar = true;
-            // 
-            // chkRemember
-            // 
-            this.chkRemember.AutoSize = true;
-            this.chkRemember.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.chkRemember.ForeColor = System.Drawing.Color.Gray;
-            this.chkRemember.Location = new System.Drawing.Point(40, 210);
-            this.chkRemember.Name = "chkRemember";
-            this.chkRemember.Size = new System.Drawing.Size(129, 24);
-            this.chkRemember.TabIndex = 2;
-            this.chkRemember.Text = "Remember me";
-            this.chkRemember.UseVisualStyleBackColor = true;
-            // 
-            // lnkForgotPassword
-            // 
-            this.lnkForgotPassword.ActiveLinkColor = System.Drawing.Color.DimGray;
-            this.lnkForgotPassword.AutoSize = true;
-            this.lnkForgotPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lnkForgotPassword.LinkColor = System.Drawing.Color.DimGray;
-            this.lnkForgotPassword.Location = new System.Drawing.Point(380, 210);
-            this.lnkForgotPassword.Name = "lnkForgotPassword";
-            this.lnkForgotPassword.Size = new System.Drawing.Size(127, 20);
-            this.lnkForgotPassword.TabIndex = 3;
-            this.lnkForgotPassword.TabStop = true;
-            this.lnkForgotPassword.Text = "Forgot password?";
+          
+     
+         
+
             // 
             // btnLogin
             // 
@@ -181,18 +161,19 @@ namespace King_Land
             // Login
             // 
             this.AcceptButton = this.btnLogin;
+            this.BackColor = System.Drawing.SystemColors.HighlightText;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.panelShadow);
             this.Controls.Add(this.panelMain);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sign in";
             this.Load += new System.EventHandler(this.Login_Load);
-            this.panelMain.ResumeLayout(true);
+            this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
             this.ResumeLayout(false);
 

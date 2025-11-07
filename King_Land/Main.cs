@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Guna.UI2.WinForms;
+using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Guna.UI2.WinForms;
 
 namespace King_Land
 {
@@ -60,7 +62,6 @@ namespace King_Land
             }
 
            
-            LoadControl(new DashboardUC());
         }
 
         private void SubmenuTimer_Tick(object sender, EventArgs e)
@@ -146,7 +147,6 @@ namespace King_Land
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            LoadControl(new DashboardUC());
         }
 
         private void btnManagement_Click(object sender, EventArgs e)
@@ -174,32 +174,47 @@ namespace King_Land
 
         private void btnCompany_Click(object sender, EventArgs e)
         {
-            LoadControl(new CompanyUC());
         }
 
-        private void btnProduct_Click(object sender, EventArgs e)
-        {
-            LoadControl(new ProductUC());
-        }
+  
 
-        private void btnProject_Click(object sender, EventArgs e)
-        {
-            LoadControl(new ProjectUC());
-        }
+
 
         private void btnUsers_Click(object sender, EventArgs e)
         {
             LoadControl(new UserManagementUC());
         }
 
-        private void btnWorkflow_Click(object sender, EventArgs e)
-        {
-            LoadControl(new WorkflowUC());
-        }
+       
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            // Return to login (UI-only). Show login form and close main.
+            // mark current user inactive (if any), then return to login UI
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(Session.CurrentUserEmail))
+                {
+                    string conString = "datasource=localhost;username=root;password=;database=kingland;";
+                    using (var con = new MySqlConnection(conString))
+                    using (var cmd = new MySqlCommand("UPDATE kingland.user SET status = @status WHERE email = @email;", con))
+                    {
+                        cmd.Parameters.AddWithValue("@status", "Inactive");
+                        cmd.Parameters.AddWithValue("@email", Session.CurrentUserEmail);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+
+                    // clear session
+                    Session.CurrentUserEmail = null;
+                }
+            }
+            catch
+            {
+                // ignore DB update errors on logout
+            }
+
+            // Show login form and close main.
             try
             {
                 Login login = new Login();
@@ -210,5 +225,15 @@ namespace King_Land
         }
 
         
+
+        private void panelMain_Paint(object sender, PaintEventArgs e)
+        {
+
         }
+
+        private void panelLogo_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+    }
     }

@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
 
 namespace King_Land
 {
@@ -62,7 +64,7 @@ namespace King_Land
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
-       
+
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
@@ -111,8 +113,13 @@ namespace King_Land
 
             if (Authenticate(email, password))
             {
+                // Keep session and open Main
                 DialogResult = DialogResult.OK;
-                Main main = new Main(); 
+                Session.CurrentUserEmail = email;
+
+                // hide login and show main form
+                this.Hide();
+                Main main = new Main();
                 main.Show();
             }
             else
@@ -124,18 +131,61 @@ namespace King_Land
             }
         }
 
+            private bool Authenticate(string email, string password)
+        {
+            string conString = "datasource=localhost;username=root;password=;database=kingland;";
+
+            string query = "SELECT COUNT(1) FROM kingland.user WHERE email = @email AND password = @password;";
+
+            try
+            {
+                using (var con = new MySqlConnection(conString))
+                using (var cmd = new MySqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@password", password);
+
+                    con.Open();
+                    var count = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (count > 0)
+                    {
+                        // mark user active
+                        using (var upd = new MySqlCommand("UPDATE kingland.user SET status = @status WHERE email = @email;", con))
+                        {
+                            upd.Parameters.AddWithValue("@status", "Active");
+                            upd.Parameters.AddWithValue("@email", email);
+                            upd.ExecuteNonQuery();
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return false;
+            }
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
-
-        private bool Authenticate(string email, string password)
+        
+            private void lnkForgotPassword_Click(object sender, EventArgs e)
         {
-            // Replace this with your real authentication (database, AD, API, etc.)
-            // Example credentials (demo only):
-            return string.Equals(email, "", StringComparison.OrdinalIgnoreCase)
-                   && password == "";
+            ForgotPassword fp = new ForgotPassword();
+            fp.ShowDialog();
+            this.Hide();
+
         }
+
+        // ... rest of file unchanged
     }
 }
